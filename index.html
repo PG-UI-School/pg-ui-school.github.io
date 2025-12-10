@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 10 Good Luck Ceremony</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #fff;
+    overflow-x: hidden;
+}
+
+/* FLOATING BG CIRCLES */
+.float {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    animation: softFloat 12s infinite linear;
+    z-index: -1;
+}
+
+@keyframes softFloat {
+    from { transform: translateY(110vh); }
+    to { transform: translateY(-10vh); }
+}
+
+/* MICRO HIDDEN TEXT */
+.micro {
+    font-size: 2px;
+    opacity: 0.25;
+    user-select: none;
+}
+
+/* CONFETTI CANVAS */
+#confetti {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+/* TOPBAR */
+.topbar {
+    width: 100%;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.topbar img {
+    height: 35px;
+    opacity: 0.85;
+}
+
+/* STORY RING */
+.pfp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 2px;
+    background: conic-gradient(#feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+    animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.pfp img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+/* CARD */
+.card {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* Cinematic Fade-In */
+.cinematic {
+    opacity: 0;
+    transform: translateY(25px);
+    animation: rise 1.5s ease-out forwards;
+}
+
+.cinematic:nth-child(1) { animation-delay: 0.3s; }
+.cinematic:nth-child(2) { animation-delay: 0.6s; }
+.cinematic:nth-child(3) { animation-delay: 0.9s; }
+
+@keyframes rise {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* DETAILS SLIDE */
+.details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+}
+
+/* LIKE BAR */
+.action-bar {
+    padding: 14px 18px;
+    border-top: 1px solid #e2e2e2;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.heart {
+    width: 32px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.heart:hover {
+    transform: scale(1.2);
+}
+
+/* Burst heart */
+.burst {
+    position: absolute;
+    animation: burst 0.6s ease-out forwards;
+}
+
+@keyframes burst {
+    from { transform: scale(0.3); opacity: 1; }
+    to { transform: scale(1.8); opacity: 0; }
+}
+
+/* DOUBLE TAP HEART */
+.big-heart {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 140px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: pop 0.8s ease-out forwards;
+}
+
+@keyframes pop {
+    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+    40% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- FLOATING BACKGROUND CIRCLES -->
+<script>
+for (let i = 0; i < 20; i++) {
+    let f = document.createElement("div");
+    f.classList.add("float");
+    let size = Math.random() * 40 + 20;
+    f.style.width = size + "px";
+    f.style.height = size + "px";
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.animationDuration = (10 + Math.random() * 6) + "s";
+    f.style.animationDelay = Math.random() * -20 + "s";
+    document.body.appendChild(f);
+}
+</script>
+
+<!-- CONFETTI -->
+<canvas id="confetti"></canvas>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2560px-Instagram_logo_2016.svg.png">
+</div>
+
+<!-- CARD -->
+<div class="card" id="card">
+
+    <!-- HEADER -->
+    <div class="header" style="display:flex;align-items:center;padding:15px;gap:12px;">
+        <div class="pfp">
+        </div>
+        <div>
+            <span style="font-weight:600;font-size:16px;">class10_official</span><br>
+            <span style="font-size:13px;color:#777;">Sponsored • Class 9th</span>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="main-content" id="tapArea" style="padding: 35px 25px; text-align:center;">
+
+        <!-- MICRO TEXT -->
+        <div class="micro">Made by Pratham • The Tech God</div>
+
+        <div class="cinematic" style="font-family:'Playfair Display',serif;font-size:34px;color:#333;">
+            Good Luck Ceremony
+        </div>
+
+        <div class="cinematic" style="font-size:14px;letter-spacing:3px;color:#999;">
+            CLASS 10 | INVITATION
+        </div>
+
+        <div class="cinematic" style="font-family:'Playfair Display',serif;font-size:26px;color:#444;">
+            Wishing You All The Best
+        </div>
+
+        <div class="details" id="details">
+            <br>
+            📅 <b>Date:</b> 23rd January <br>
+            ⏰ <b>Time:</b> 2:00 PM – 3:00 PM <br>
+            📍 <b>Venue:</b> Multi-Purpose Hall, The Oasis <br><br>
+        </div>
+    </div>
+
+    <!-- LIKE BAR -->
+    <div class="action-bar">
+        <img class="heart" id="heartIcon" src="https://cdn-icons-png.flaticon.com/512/833/833300.png">
+        <span>Liked by <b>Pratham</b> and others</span>
+    </div>
+
+    <!-- BUTTON -->
+    <button id="detailsBtn" style="
+        display:block;width:85%;padding:13px;background:linear-gradient(45deg,#833ab4,#fd1d1d,#fcb045);
+        color:white;font-size:17px;border:none;border-radius:30px;margin:25px auto 30px;
+        cursor:pointer;font-weight:600;">
+        View Program Details
+    </button>
+</div>
+
+<script>
+/* SLIDE DOWN DETAILS + CONFETTI */
+document.getElementById("detailsBtn").onclick = function() {
+    let d = document.getElementById("details");
+    d.style.maxHeight = d.scrollHeight + "px";
+    startConfetti();
+};
+
+/* LIKE BURST */
+let liked = false;
+document.getElementById("heartIcon").onclick = function(e) {
+    liked = !liked;
+    this.src = liked 
+        ? "https://cdn-icons-png.flaticon.com/512/833/833472.png"
+        : "https://cdn-icons-png.flaticon.com/512/833/833300.png";
+
+    let burst = document.createElement("img");
+    burst.src = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
+    burst.className = "burst";
+    burst.style.left = (e.pageX - 15) + "px";
+    burst.style.top = (e.pageY - 15) + "px";
+    burst.style.width = "30px";
+    document.body.appendChild(burst);
+
+    setTimeout(() => burst.remove(), 600);
+};
+
+/* DOUBLE TAP */
+let tapArea = document.getElementById("tapArea");
+tapArea.addEventListener("dblclick", function(e) {
+    let big = document.createElement("img");
+    big.src = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
+    big.className = "big-heart";
+    document.body.appendChild(big);
+    setTimeout(() => big.remove(), 900);
+
+    document.getElementById("heartIcon").src =
+        "https://cdn-icons-png.flaticon.com/512/833/833472.png";
+});
+
+/* CONFETTI SYSTEM */
+const confetti = document.getElementById("confetti");
+const ctx = confetti.getContext("2d");
+confetti.width = window.innerWidth;
+confetti.height = window.innerHeight;
+
+let particles = [];
+
+function startConfetti() {
+    for (let i = 0; i < 120; i++) {
+        particles.push({
+            x: Math.random() * confetti.width,
+            y: Math.random() * -50,
+            w: 8,
+            h: 14,
+            color: `hsl(${Math.random()*360},100%,50%)`,
+            speed: Math.random() * 3 + 2,
+            rotate: Math.random() * 360
+        });
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, confetti.width, confetti.height);
+
+    particles.forEach((p, idx) => {
+        p.y += p.speed;
+        p.rotate += 5;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotate * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+
+        if (p.y > confetti.height) particles.splice(idx, 1);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
