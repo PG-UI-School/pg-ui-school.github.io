@@ -364,19 +364,17 @@ submitBtn.onclick = function () {
     sendLike(name);
 };
 
-/* SEND TO GOOGLE APPS SCRIPT */
-function sendLike(name) {
-    fetch("https://script.google.com/macros/s/AKfycbyX90OV_Vu95-kyugTLWwEjoYgS5cK2xqqCIT2byRYWX0vjEsNUw3spjk4-RcbjNOo/exec", {
+/* SEND TO GOOGLE APPS SCRIPT */function sendLike(name) {
+    const data = new URLSearchParams();
+    data.append("name", name);
+    data.append("page", "Class X Good Luck Ceremony");
+
+    fetch("https://script.google.com/macros/s/AKfycbyFjWKIv-2-69hqa9OEvgl7A5TyZ_eX_jxb7TRb2ypwRwr_ISce2MhFS3dhX_wjbq8y/exec", {
         method: "POST",
-        body: JSON.stringify({
-            name: name,
-            page: "Class X Good Luck Ceremony"
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
+        body: data
     });
 }
+
 /* DOUBLE TAP */
 let tapArea = document.getElementById("tapArea");
 tapArea.addEventListener("dblclick", function(e) {
