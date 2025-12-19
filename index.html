@@ -365,16 +365,22 @@ submitBtn.onclick = function () {
     sendLike(name);
 };
 
-/* SEND TO GOOGLE APPS SCRIPT */function sendLike(name) {
-    const data = new URLSearchParams();
-    data.append("name", name);
-    data.append("page", "Class X Good Luck Ceremony");
-
-    fetch("https://script.google.com/macros/s/AKfycbwL15k5S9vOib-Hmsy2fSC7Hi7zHcgLdImjeGx16p3-Zk5tPACQx7dR77ZYik6MzRNl/exec", {
-        method: "POST",
-        body: data
+function sendLike(name) {
+    const params = new URLSearchParams({
+        name: name,
+        page: "Class X Good Luck Ceremony"
     });
+
+    const url = "https://script.google.com/macros/s/AKfycbwL15k5S9vOib-Hmsy2fSC7Hi7zHcgLdImjeGx16p3-Zk5tPACQx7dR77ZYik6MzRNl/exec"
+        + "?" + params.toString();
+
+    // Fire-and-forget, no CORS preflight, no nonsense
+    fetch(url)
+        .catch(() => {
+            // Silence is elegance. Logging is optional.
+        });
 }
+
 
 /* DOUBLE TAP */
 let tapArea = document.getElementById("tapArea");
