@@ -107,6 +107,63 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(6px);
+}
+
+.modal-box {
+    background: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    animation: modalPop 0.4s ease;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-box h2 {
+    font-family: "Playfair Display", serif;
+    margin-bottom: 8px;
+}
+
+.modal-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 18px;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 18px;
+    font-size: 15px;
+}
+
+.modal-box button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg,#833ab4,#fd1d1d,#fcb045);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+}
 
 /* Cinematic Fade-In */
 .cinematic {
@@ -181,6 +238,16 @@ body {
 }
 </style>
 </head>
+<!-- LIKE MODAL -->
+<div id="likeModal" class="modal">
+    <div class="modal-box">
+        <h2>✨ One Small Step</h2>
+        <p>Enter your name to like this invitation</p>
+
+        <input type="text" id="userName" placeholder="Your Name">
+        <button id="submitLike">Confirm Like</button>
+    </div>
+</div>
 
 <body>
 
@@ -269,23 +336,47 @@ document.getElementById("detailsBtn").onclick = function() {
 
 /* LIKE BURST */
 let liked = false;
-document.getElementById("heartIcon").onclick = function(e) {
-    liked = !liked;
-    this.src = liked 
-        ? "https://cdn-icons-png.flaticon.com/512/833/833472.png"
-        : "https://cdn-icons-png.flaticon.com/512/833/833300.png";
+const heart = document.getElementById("heartIcon");
+const modal = document.getElementById("likeModal");
+const submitBtn = document.getElementById("submitLike");
 
-    let burst = document.createElement("img");
-    burst.src = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
-    burst.className = "burst";
-    burst.style.left = (e.pageX - 15) + "px";
-    burst.style.top = (e.pageY - 15) + "px";
-    burst.style.width = "30px";
-    document.body.appendChild(burst);
+heart.onclick = function(e) {
 
-    setTimeout(() => burst.remove(), 600);
+    if (liked) {
+        // UNLIKE → silent, no drama
+        liked = false;
+        heart.src = "https://cdn-icons-png.flaticon.com/512/833/833300.png";
+        return;
+    }
+
+    // LIKE → open modal
+    modal.style.display = "flex";
 };
 
+submitBtn.onclick = function () {
+    const name = document.getElementById("userName").value.trim();
+    if (!name) return alert("Name required. Obviously.");
+
+    liked = true;
+    heart.src = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
+    modal.style.display = "none";
+
+    sendLike(name);
+};
+
+/* SEND TO GOOGLE APPS SCRIPT */
+function sendLike(name) {
+    fetch("https://script.google.com/macros/s/AKfycbyX90OV_Vu95-kyugTLWwEjoYgS5cK2xqqCIT2byRYWX0vjEsNUw3spjk4-RcbjNOo/exec", {
+        method: "POST",
+        body: JSON.stringify({
+            name: name,
+            page: "Class X Good Luck Ceremony"
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
 /* DOUBLE TAP */
 let tapArea = document.getElementById("tapArea");
 tapArea.addEventListener("dblclick", function(e) {
