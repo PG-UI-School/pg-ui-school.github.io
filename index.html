@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Suez Equation Calculator</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #0f172a;
+    color: white;
+}
+
+.header {
+    text-align: center;
+    padding: 25px;
+    background: #1e293b;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.header p {
+    opacity: 0.8;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+.card {
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+
+label {
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+
+input {
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    font-size:16px;
+}
+
+
+button {
+
+    margin-top:20px;
+    width:100%;
+    padding:14px;
+
+    background:#38bdf8;
+    color:#0f172a;
+
+    border:none;
+    border-radius:10px;
+
+    font-size:18px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+button:hover {
+
+    background:#7dd3fc;
+
+}
+
+
+.results {
+
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(200px,1fr));
+
+    gap:15px;
+
+}
+
+
+.result {
+
+    background:#334155;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+
+}
+
+
+.result h3 {
+
+    margin-top:0;
+    color:#38bdf8;
+
+}
+
+
+.value {
+
+    font-size:25px;
+    font-weight:bold;
+
+}
+
+
+
+.graph-grid {
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(450px,1fr));
+
+    gap:20px;
+
+}
+
+
+
+.graph {
+
+    background:#334155;
+    padding:15px;
+    border-radius:12px;
+
+}
+
+
+canvas {
+
+    width:100%!important;
+    height:300px!important;
+
+}
+
+
+.footer {
+
+    text-align:center;
+    padding:20px;
+    opacity:0.7;
+
+}
+
+
+@media(max-width:600px){
+
+.graph-grid{
+    grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<h1>🚢 Suez Equation Calculator</h1>
+
+<p>
+Optimization of trapezoidal channels using calculus
+</p>
+
+</div>
+
+
+
+<div class="container">
+
+
+<div class="card">
+
+<h2>Input Parameters</h2>
+
+
+<div class="inputs">
+
+
+<div>
+
+<label>
+Cross-sectional Area (A)
+</label>
+
+<input 
+id="area"
+type="number"
+value="100"
+min="1"
+>
+
+</div>
+
+
+
+<div>
+
+<label>
+Side Angle (θ in degrees)
+</label>
+
+<input
+id="angle"
+type="number"
+value="60"
+min="1"
+max="89"
+>
+
+</div>
+
+
+</div>
+
+
+<button onclick="calculate()">
+Calculate Optimization
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>Optimized Results</h2>
+
+
+<div class="results">
+
+
+<div class="result">
+
+<h3>k</h3>
+
+<div class="value" id="k">
+-
+</div>
+
+</div>
+
+
+
+<div class="result">
+
+<h3>Depth (h)</h3>
+
+<div class="value" id="height">
+-
+</div>
+
+</div>
+
+
+
+<div class="result">
+
+<h3>Bottom Width (b)</h3>
+
+<div class="value" id="width">
+-
+</div>
+
+</div>
+
+
+
+<div class="result">
+
+<h3>Perimeter (P)</h3>
+
+<div class="value" id="perimeter">
+-
+</div>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="graph-grid">
+
+
+
+<div class="graph">
+
+<h3>
+Area vs Wetted Perimeter
+</h3>
+
+<canvas id="graph1"></canvas>
+
+</div>
+
+
+
+<div class="graph">
+
+<h3>
+Area vs Bottom Width
+</h3>
+
+<canvas id="graph2"></canvas>
+
+</div>
+
+
+
+<div class="graph">
+
+<h3>
+Area vs Depth
+</h3>
+
+<canvas id="graph3"></canvas>
+
+</div>
+
+
+
+<div class="graph">
+
+<h3>
+Angle vs Wetted Perimeter
+</h3>
+
+<canvas id="graph4"></canvas>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="footer">
+
+Maths Pirates Project • Trapezoidal Channel Optimization
+
+</div>
+
+
+
+<script>
+
+function degToRad(deg) {
+    return deg * Math.PI / 180;
+}
+
+
+function calculateValues(area, angle) {
+
+    let theta = degToRad(angle);
+
+    let csc = 1 / Math.sin(theta);
+    let cot = 1 / Math.tan(theta);
+
+
+    let k = (2 * csc) - cot;
+
+
+    let h = Math.sqrt(area / k);
+
+
+    let b = 2 * h * csc;
+
+
+    let P = 2 * b;
+
+
+    return {
+        k: k,
+        h: h,
+        b: b,
+        P: P
+    };
+
+}
+
+
+
+function calculate() {
+
+
+    let area = Number(
+        document.getElementById("area").value
+    );
+
+
+    let angle = Number(
+        document.getElementById("angle").value
+    );
+
+
+    if(area <= 0 || angle <= 0 || angle >= 90){
+
+        alert("Enter valid values. Angle must be between 1° and 89°.");
+
+        return;
+
+    }
+
+
+
+    let result = calculateValues(area, angle);
+
+
+
+    document.getElementById("k").innerHTML =
+    result.k.toFixed(3);
+
+
+
+    document.getElementById("height").innerHTML =
+    result.h.toFixed(3) + " m";
+
+
+
+    document.getElementById("width").innerHTML =
+    result.b.toFixed(3) + " m";
+
+
+
+    document.getElementById("perimeter").innerHTML =
+    result.P.toFixed(3) + " m";
+
+
+
+    updateGraphs(area, angle);
+
+}
+
+
+
+
+
+function generateAreaData(angle){
+
+
+    let labels = [];
+
+    let perimeter = [];
+
+    let width = [];
+
+    let height = [];
+
+
+
+    for(let A = 10; A <= 500; A += 10){
+
+
+        let values = calculateValues(A, angle);
+
+
+        labels.push(A);
+
+
+        perimeter.push(
+            values.P.toFixed(3)
+        );
+
+
+        width.push(
+            values.b.toFixed(3)
+        );
+
+
+        height.push(
+            values.h.toFixed(3)
+        );
+
+
+    }
+
+
+    return {
+
+        labels,
+        perimeter,
+        width,
+        height
+
+    };
+
+
+}
+
+
+
+
+
+function generateAngleData(area){
+
+
+    let labels = [];
+
+    let perimeter = [];
+
+
+
+    for(let angle = 20; angle <= 85; angle += 5){
+
+
+        let values =
+        calculateValues(area, angle);
+
+
+
+        labels.push(angle);
+
+
+
+        perimeter.push(
+            values.P.toFixed(3)
+        );
+
+
+    }
+
+
+
+    return {
+
+        labels,
+        perimeter
+
+    };
+
+
+}
+let chart1;
+let chart2;
+let chart3;
+let chart4;
+
+
+
+function createChart(id, title, labels, data, xLabel, yLabel){
+
+
+    return new Chart(
+        document.getElementById(id),
+        {
+
+            type: "line",
+
+            data: {
+
+                labels: labels,
+
+                datasets: [
+                    {
+
+                        label: title,
+
+                        data: data,
+
+                        tension:0.3,
+
+                        borderWidth:3,
+
+                        pointRadius:2
+
+                    }
+                ]
+
+            },
+
+
+            options:{
+
+
+                responsive:true,
+
+
+                plugins:{
+
+
+                    legend:{
+
+                        display:true
+
+                    }
+
+
+                },
+
+
+                scales:{
+
+
+                    x:{
+
+
+                        title:{
+
+
+                            display:true,
+
+                            text:xLabel
+
+
+                        }
+
+
+                    },
+
+
+                    y:{
+
+
+                        title:{
+
+
+                            display:true,
+
+                            text:yLabel
+
+
+                        }
+
+
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
+
+    );
+
+
+}
+
+
+
+
+
+
+function updateGraphs(area, angle){
+
+
+    let areaData =
+    generateAreaData(angle);
+
+
+
+    let angleData =
+    generateAngleData(area);
+
+
+
+
+    if(chart1) chart1.destroy();
+
+    if(chart2) chart2.destroy();
+
+    if(chart3) chart3.destroy();
+
+    if(chart4) chart4.destroy();
+
+
+
+
+
+    chart1 = createChart(
+
+        "graph1",
+
+        "Wetted Perimeter",
+
+        areaData.labels,
+
+        areaData.perimeter,
+
+        "Area (m²)",
+
+        "Perimeter (m)"
+
+    );
+
+
+
+
+
+    chart2 = createChart(
+
+        "graph2",
+
+        "Bottom Width",
+
+        areaData.labels,
+
+        areaData.width,
+
+        "Area (m²)",
+
+        "Width (m)"
+
+    );
+
+
+
+
+
+    chart3 = createChart(
+
+        "graph3",
+
+        "Water Depth",
+
+        areaData.labels,
+
+        areaData.height,
+
+        "Area (m²)",
+
+        "Depth (m)"
+
+    );
+
+
+
+
+
+    chart4 = createChart(
+
+        "graph4",
+
+        "Angle Optimization",
+
+        angleData.labels,
+
+        angleData.perimeter,
+
+        "Angle (degrees)",
+
+        "Perimeter (m)"
+
+    );
+
+
+}
+
+
+
+
+window.onload = function(){
+
+
+    calculate();
+
+
+};
+document.getElementById("area")
+.addEventListener("input", calculate);
+
+
+document.getElementById("angle")
+.addEventListener("input", calculate);
+
+
+
+
+let equationBox = document.createElement("div");
+
+equationBox.className = "card";
+
+
+equationBox.innerHTML = `
+
+<h2>Optimization Equations</h2>
+
+<p>
+
+<b>1.</b>
+
+k = 2cscθ − cotθ
+
+</p>
+
+
+<p>
+
+<b>2.</b>
+
+h = √(A / k)
+
+</p>
+
+
+<p>
+
+<b>3.</b>
+
+b = 2h cscθ
+
+</p>
+
+
+<p>
+
+<b>4.</b>
+
+P = 2b
+
+</p>
+
+
+`;
+
+
+
+document
+.querySelector(".container")
+.insertBefore(
+    equationBox,
+    document.querySelector(".graph-grid")
+);
+
+
+
+
+
+console.log(
+"Suez Equation Calculator Loaded Successfully"
+);
+
+</script>
+
+
+</body>
+</html>
